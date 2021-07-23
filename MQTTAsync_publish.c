@@ -19,6 +19,8 @@
 #include <string.h>
 #include "MQTTAsync.h"
 
+// valida em qual so o app sera compilado
+
 #if !defined(_WIN32)
 #include <unistd.h>
 #else
@@ -29,6 +31,8 @@
 #include <OsWrapper.h>
 #endif
 
+// informacoes basicas para o envio de uma mensagem 
+
 #define ADDRESS     "tcp://localhost:1883"
 #define CLIENTID    "ExampleClientPub"
 #define TOPIC       "MQTT Examples"
@@ -36,19 +40,21 @@
 #define QOS         1
 #define TIMEOUT     10000L
 
+// flag que determina se a acao acabou ou nao
 int finished = 0;
 
+// acoes que o cliente vai tomar caso perca a conexao com o Broker
 void connlost(void *context, char *cause)
 {
-	MQTTAsync client = (MQTTAsync)context;
+	MQTTAsync client = (MQTTAsync)context; // covert o context de void para MQTTAsync
 	MQTTAsync_connectOptions conn_opts = MQTTAsync_connectOptions_initializer;
 	int rc;
 
 	printf("\nConnection lost\n");
 	printf("     cause: %s\n", cause);
 
-	printf("Reconnecting\n");
-	conn_opts.keepAliveInterval = 20;
+	printf("Reconnecting\n"); 
+	conn_opts.keepAliveInterval = 20; 
 	conn_opts.cleansession = 1;
 	if ((rc = MQTTAsync_connect(client, &conn_opts)) != MQTTASYNC_SUCCESS)
 	{
@@ -57,6 +63,7 @@ void connlost(void *context, char *cause)
 	}
 }
 
+// acao que o cliente ira tomar ao obter uma falha de disconnect
 void onDisconnectFailure(void* context, MQTTAsync_failureData* response)
 {
 	printf("Disconnect failed\n");

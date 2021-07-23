@@ -104,7 +104,33 @@ void onConnectFailure(void* context, MQTTAsync_failureData* response)
 }
 
 int main(){
-    // criar instanciar
+    MQTTAsync client;
+	MQTTAsync_connectOptions conn_opts = MQTTAsync_connectOptions_initializer;
+	int rc, op;
+	
+	FILE *data = fopen("data.txt", "ra");
+	char nome[50]; 
+	printf("1-Logar\n2-Cadastrar Usuario\n");
+	scanf("%d", &op);
+	do{
+		switch (op){
+			case 1:
+				printf("Nome Usuario: ");
+				scanf("%s", nome);
+			case 2:
+				printf("Novo Usuario: ");
+				scanf("%s", nome);
+				fputs(data, strcat(nome, "\n"));
+			default:
+				printf("Opcao Invalida!Digite Novamente: ");
+				scanf("%d", &op);
+		}
+	}while(op != 1 || op != 2);
+
+	if(rc = MQTTAsync_create(&client, ADDRESS, strcat(nome, "_User"), MQTTCLIENT_PERSISTENCE_NONE, NULL) != MQTTASYNC_SUCCESS){
+		printf("Failed to create client object, return code %d\n", rc);
+		exit(EXIT_FAILURE);
+	}
     // conectar com o broker Mosquitto
     
     /*
@@ -121,5 +147,5 @@ int main(){
     */
 
     // liberar a memoria do cliente
-    return 0;
+    return rc;
 }
