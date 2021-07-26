@@ -116,10 +116,12 @@ int main(){
 		switch (op){
 			case 1:
 				printf("Nome Usuario: ");
-				scanf("%s", nome);
+				fgets(nome, 50, stdin);
+     				nome[strcspn(nome, "\n")] = '\0';
 			case 2:
 				printf("Novo Usuario: ");
-				scanf("%s", nome);
+				fgets(nome, 50, stdin);
+     				nome[strcspn(nome, "\n")] = '\0';
 				fputs(data, strcat(nome, "\n"));
 			default:
 				printf("Opcao Invalida!Digite Novamente: ");
